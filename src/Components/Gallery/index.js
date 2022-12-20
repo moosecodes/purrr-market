@@ -1,12 +1,12 @@
 import React from "react"
 import Grid from "@mui/material/Grid";
 import Container from '@mui/material/Container'
-import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux"
 import { addItemToCart, removeLastItemFromCart} from "../../store/cart/cartSlice"
-import { addPrice, subtractPrice} from "../../store/totalprice/totalPriceSlice"
+import { addPrice } from "../../store/totalprice/totalPriceSlice"
+import ProductRatings from "../ProductRatings";
 
 export default function Gallery(props) {
   const dispatch = useDispatch()
@@ -23,21 +23,22 @@ export default function Gallery(props) {
 
   return (
     <Container maxWidth="xlg">
-      <p>
-        <Button variant="contained" onClick={() => handleClick()}>Remove Last Item From Cart</Button>
-      </p>
       <Grid container spacing={2}>
         { props.products.map(item =>
-            <Grid item xs={12} sm={4} key={item.id}>
+            <Grid item key={item.id} xs={12} sm={5} md={4} lg={3}>
               <Stack direction="column" alignItems="stretch" spacing={2}>
-                <img alt="picsum" src="https://picsum.photos/400/400"/>
-                <Rating name="read-only" value={4} />
-                <p>{item.name}: ${item.price} /unit</p>
-                <p>{item.description}</p>
+                <b>{item.breeds[0].name}</b>
+                <img alt={item.id} src={item.url} />
                 <Button
                   variant="contained"
                   onClick={() => handleClick(item)}
-                >Add #{item.id}</Button>
+                >Add {item.breeds[0].name}
+                </Button>
+                <ProductRatings
+                  item={item}
+                  description={item.breeds[0].description}
+                  temperament={item.breeds[0].temperament}
+                />
               </Stack>
             </Grid>
         )}

@@ -2,15 +2,18 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const cartSlice = createSlice( {
   name: 'cart',
-  initialState: [],
+  initialState: {},
   reducers: {
     getCurrentCart: (state) => state.cart,
     addItemToCart: (state, action) => {
-      state.push(action.payload)
+      if(!state.hasOwnProperty(action.payload.id)) {
+        state[action.payload.id] = { ...action.payload, quantity: 1 }
+      } else {
+        state[action.payload.id].quantity++
+      }
       return state
     },
-    removeLastItemFromCart: (state, action) => {
-      console.log(action)
+    removeLastItemFromCart: (state) => {
       state.pop()
       return state
     }

@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import Button from "@mui/material/Button";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -71,17 +72,18 @@ export default function SearchAppBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Shop Tool
+            The Purrrfect Marketplace
           </Typography>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search Products"
-              inputProps={{ 'aria-label': 'search' }}
+              placeholder="Search By Breed"
+              inputProps={{ 'aria-label': 'search by breed' }}
             />
           </Search>
+          <Button variant='contained'>Search</Button>
         </Toolbar>
       </AppBar>
     </Box>
