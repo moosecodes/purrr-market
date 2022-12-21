@@ -13,9 +13,6 @@ export default function Layout() {
     fetchProducts()
       .then(() => setError(false))
       .catch(e => setError(e))
-      .finally(() => {
-        console.log(error)
-      })
   }, [])
 
   const fetchProducts = async ()=>  {
@@ -23,12 +20,7 @@ export default function Layout() {
       headers: { 'x-api-key' : process.env.REACT_APP_CAT_API_KEY }
     })
       .then(res => res.json())
-      .then(cats => {
-
-        console.log(cats)
-
-        setProducts(prev => [...prev, ...cats])
-      })
+      .then(cats => setProducts(prev => [...prev, ...cats]))
       .catch(e => setError(e))
   }
 

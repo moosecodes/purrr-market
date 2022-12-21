@@ -1,11 +1,28 @@
-import React from 'react'
-import {useSelector} from "react-redux";
-import {getCurrentCart} from "../../store/cart/cartSlice";
+import React, { useEffect } from 'react'
+import {useSelector, useDispatch} from "react-redux";
+import {getCurrentCart, setCart} from "../../store/cart/cartSlice";
 import Button from "@mui/material/Button";
 import {Avatar} from "@mui/material";
+import localforage from "localforage";
 
 export default function Cart() {
   const currentCart = useSelector(getCurrentCart).payload.cart
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    localforage.getItem('cart')
+      .then(cachedCart => {
+        if(cachedCart) {
+          localforage.setItem('cart', cachedCart)
+            .then(console.log)
+            .catch(console.log)
+          dispatch(setCart(cachedCart))
+          show(cachedCart)
+        }
+      })
+      .catch()
+      .finally()
+  }, [])
 
   const show = (cart) => {
     let list = []
@@ -31,8 +48,15 @@ export default function Cart() {
       <Button
         variant="contained"
         disabled={!Object.keys(currentCart).length}
+        onClick={() => {
+          localforage.setItem('cart', currentCart)
+            .then(console.log)
+            .then(console.log)
+            .catch(console.log)
+        }}
       >
-        Checkout
-      </Button></p>
+        Save
+      </Button>
+    </p>
   </>
 }

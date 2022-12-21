@@ -5,21 +5,25 @@ export const cartSlice = createSlice( {
   initialState: {},
   reducers: {
     getCurrentCart: (state) => state.cart,
+    setCart: (state, action) => {
+      state = {...state, ...action.payload}
+      return state
+    },
     addItemToCart: (state, action) => {
-      if(!state.hasOwnProperty(action.payload.id)) {
-        state[action.payload.id] = { ...action.payload, quantity: 1 }
-      } else {
+      if(state.hasOwnProperty(action.payload.id)) {
         state[action.payload.id].quantity++
+      } else {
+        state[action.payload.id] = { ...action.payload, quantity: 1 }
       }
       return state
     },
-    removeLastItemFromCart: (state) => {
-      state.pop()
+    removeLastItemFromCart: (state, action) => {
+      delete state[Object.keys(state)[0]]
       return state
     }
   }
 })
 
-export const { getCurrentCart, addItemToCart, removeLastItemFromCart } = cartSlice.actions
+export const { getCurrentCart, setCart, addItemToCart, removeLastItemFromCart } = cartSlice.actions
 
 export default cartSlice.reducer
