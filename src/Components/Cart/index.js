@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import {useSelector, useDispatch} from "react-redux";
-import {getCurrentCart, setCart} from "../../store/cart/cartSlice";
+import {getCurrentCart, setCart, clearCart, removeItemFromCart} from "../../store/cart/cartSlice";
 import Button from "@mui/material/Button";
 import {Avatar} from "@mui/material";
 import localforage from "localforage";
@@ -28,18 +28,19 @@ export default function Cart() {
             />
             <span>{currentCart[key].breeds[0].name}</span>
             <small> x {currentCart[key].quantity}</small>
+            <Button variant="outlined" onClick={() => {
+              dispatch(removeItemFromCart(key))
+              const {[key]: id, ...rest} = currentCart
+              localforage.setItem('cart', rest)
+            }}>Remove</Button>
           </div>))
       }
-    <p>
       <Button
         variant="contained"
         disabled={!Object.keys(currentCart).length}
-        onClick={() => {
-          dispatch(setCart(currentCart))
-        }}
+        onClick={() => localforage.clear().then(dispatch(clearCart()))}
       >
-        Save
+        Clear
       </Button>
-    </p>
   </div>
 }
