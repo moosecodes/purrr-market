@@ -10,9 +10,8 @@ export default function Layout() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetchProducts()
-      .then(() => setError(false))
-      .catch(e => setError(e))
+    fetchProducts().then(() => setError(false))
+    console.log(error)
   }, [])
 
   const fetchProducts = async ()=>  {

@@ -21,7 +21,7 @@ const StyledRating = styled(Rating)({
   },
 });
 
-export default function ProductRatings({ item, description, temperament }) {
+export default function ProductRatings({ item }) {
   const details = item.breeds[0]
   const qualities = [
     'affection_level',
@@ -35,7 +35,6 @@ export default function ProductRatings({ item, description, temperament }) {
     'shedding_level',
     'vocalisation',
   ]
-
   const descriptionStyles = {
     margin: '20px 0 0 0',
     display: 'flex',
@@ -62,30 +61,28 @@ export default function ProductRatings({ item, description, temperament }) {
         <Typography>Description</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography>
-          {description}
-        </Typography>
+        <Typography>{item.breeds[0].description}</Typography>
         <Box sx={descriptionStyles}>
           {
-            temperament.split(',').map(t => <Stack key={t} direction="row" spacing={1}>
+            item.breeds[0].temperament.split(',').map(t => <Stack key={t} direction="row" spacing={1}>
               <Chip label={t} variant="outlined" sx={{ alignSelf: 'stretch'}}/>
             </Stack>)
           }
         </Box>
         <Box sx={{...descriptionStyles, gap: '30px'}}>
-        {
-          qualities.map(stat => <div key={stat}>
-            <div><small>{ formatQuality(stat) }</small></div>
-            <StyledRating
-              name="customized-color"
-              size="small"
-              value={details[stat]}
-              precision={0.5}
-              icon={<FavoriteIcon fontSize="inherit" />}
-              emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
-            />
-          </div>)
-        }
+          {
+            qualities.map(stat => <div key={stat}>
+              <div><small>{ formatQuality(stat) }</small></div>
+              <StyledRating
+                name="customized-color"
+                size="small"
+                value={details[stat]}
+                precision={0.5}
+                icon={<FavoriteIcon fontSize="inherit" />}
+                emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+              />
+            </div>)
+          }
         </Box>
       </AccordionDetails>
     </Accordion>
