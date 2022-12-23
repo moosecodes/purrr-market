@@ -9,9 +9,9 @@ import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 
 const actions = [
-  { icon: <FileCopyIcon />, name: 'Copy' },
-  { icon: <SaveIcon />, name: 'Save' },
-  { icon: <PrintIcon />, name: 'Print' },
+  { icon: <FileCopyIcon />, name: 'GitHub' },
+  { icon: <SaveIcon />, name: 'Contact' },
+  { icon: <PrintIcon />, name: 'About' },
   { icon: <ShareIcon />, name: 'Share' },
 ];
 
@@ -19,7 +19,7 @@ export default function BasicSpeedDial() {
   return (
     <Box>
       <SpeedDial
-        ariaLabel="SpeedDial basic example"
+        ariaLabel="The Purrrfect Marketplace Information"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
         icon={<SpeedDialIcon />}
       >
@@ -28,6 +28,7 @@ export default function BasicSpeedDial() {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
+            tooltipOpen
           />
         ))}
       </SpeedDial>

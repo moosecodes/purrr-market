@@ -3,11 +3,6 @@ import { styled } from '@mui/material/styles';
 import Rating from "@mui/material/Rating";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Stack from "@mui/material/Stack";
 import {Chip} from "@mui/material";
 import Box from "@mui/material/Box";
@@ -35,16 +30,8 @@ export default function ProductRatings({ item }) {
     'shedding_level',
     'vocalisation',
   ]
-  const descriptionStyles = {
-    margin: '20px 0 0 0',
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    gap: '5px',
-    rowGap: '10px'
-  }
 
-  const formatQuality = (stat) => {
+  const formatQualityTitle = (stat) => {
     // Replace underscores with spaces, capitalize first letter of each word
     return stat
       .replace('_', ' ')
@@ -52,27 +39,20 @@ export default function ProductRatings({ item }) {
   }
 
   return <>
-    <Accordion TransitionProps={{ unmountOnExit: true }}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        <Typography>Description</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>{item.breeds[0].description}</Typography>
-        <Box sx={descriptionStyles}>
-          {
-            item.breeds[0].temperament.split(',').map(t => <Stack key={t} direction="row" spacing={1}>
-              <Chip label={t} variant="outlined" sx={{ alignSelf: 'stretch'}}/>
-            </Stack>)
-          }
-        </Box>
-        <Box sx={{...descriptionStyles, gap: '30px'}}>
-          {
-            qualities.map(stat => <div key={stat}>
-              <div><small>{ formatQuality(stat) }</small></div>
+    <div>
+      <br/>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, rowGap: 2 }}>
+        {
+          item.breeds[0].temperament.split(',').map(t => <Stack key={t} direction="row" spacing={1}>
+            <Chip label={t} variant="outlined" sx={{ alignSelf: 'stretch'}}/>
+          </Stack>)
+        }
+      </Box>
+      <br/>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, rowGap: 2 }}>
+        {
+          qualities.map(stat => <div key={stat}>
+              <div><small>{ formatQualityTitle(stat) }</small></div>
               <StyledRating
                 name="customized-color"
                 size="small"
@@ -80,11 +60,12 @@ export default function ProductRatings({ item }) {
                 precision={0.5}
                 icon={<FavoriteIcon fontSize="inherit" />}
                 emptyIcon={<FavoriteBorderIcon fontSize="inherit" />}
+                readOnly
               />
-            </div>)
-          }
-        </Box>
-      </AccordionDetails>
-    </Accordion>
+            </div>
+          )
+        }
+      </Box>
+    </div>
   </>
 }

@@ -16,6 +16,9 @@ export const cartSlice = createSlice( {
     },
     addItemToCart: (state, action) => {
       if(state.hasOwnProperty(action.payload.id)) {
+        if(!state[action.payload.id].quantity) {
+          state[action.payload.id].quantity = 0
+        }
         state[action.payload.id].quantity++
       } else {
         state[action.payload.id] = {

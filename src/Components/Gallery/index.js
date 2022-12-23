@@ -5,8 +5,10 @@ import Container from '@mui/material/Container'
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import {addItemToCart, getCurrentCart} from "../../store/cart/cartSlice"
-import ProductRatings from "../ProductRatings";
 import localforage from "localforage";
+import FullScreenDialog from "../FullScreenDialog";
+import {Fade} from "@mui/material";
+import Rating from "@mui/material/Rating";
 
 export default function Gallery(props) {
   const currentCart = useSelector(getCurrentCart).payload.cart
@@ -23,8 +25,16 @@ export default function Gallery(props) {
                 spacing={2}
               >
                 <b>{item.breeds[0].name}</b>
-                <ProductRatings item={item} />
-                <img alt={item.id} src={item.url} />
+                <Rating
+                  name="simple-controlled"
+                  value={3}
+                  onChange={(event, newValue) => {
+                    // setValue(newValue);
+                  }}
+                />
+                <Fade in={true}>
+                  <img alt={item.id} src={item.url} />
+                </Fade>
                 <Button
                   variant="contained"
                   onClick={() => {
@@ -33,6 +43,7 @@ export default function Gallery(props) {
                   }}
                 >Add {item.breeds[0].name}
                 </Button>
+                <FullScreenDialog item={item} />
               </Stack>
             </Grid>
           )
