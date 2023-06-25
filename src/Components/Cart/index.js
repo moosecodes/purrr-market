@@ -24,9 +24,7 @@ export default function Cart() {
   const cachedCart = localforage.getItem('cart')
 
   useEffect(() => {
-    cachedCart.then(cart => {
-      dispatch(setCart(cart))
-    })
+    cachedCart.then(cart => dispatch(setCart(cart)))
   }, [])
 
   return <div>
