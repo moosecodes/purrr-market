@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+// src/Layout/index.jsx
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { InView } from 'react-intersection-observer';
 
@@ -23,19 +24,21 @@ export default function Layout() {
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
 
   // search state
-  const [typingQuery, setTypingQuery] = useState('');   // what user types
-  const [query, setQuery] = useState('');               // applied text
-  const [mode, setMode] = useState('partial');          // 'partial' | 'exact'
+  const [typingQuery, setTypingQuery] = useState(''); // what user types
+  const [query, setQuery] = useState('');             // applied filter
+  const [mode, setMode] = useState('partial');        // 'partial' | 'exact'
 
+  // env
   const limit = Number(import.meta.env.VITE_API_LIMIT ?? 20);
   const API = import.meta.env.VITE_API_URL ?? 'https://api.thecatapi.com/v1/images/search';
   const KEY = import.meta.env.VITE_API_KEY ?? '';
-  const headers = KEY ? { 'x-api-key': KEY } : {};
 
-  async function fetchProducts() {
+  // fetch page
+  const fetchProducts = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     try {
+      const headers = KEY ? { 'x-api-key': KEY } : {};
       const params = new URLSearchParams({
         limit: String(limit),
         has_breeds: '1',
@@ -48,13 +51,14 @@ export default function Layout() {
       let items = await res.json();
       items = Array.isArray(items) ? items : [];
 
-      // fallback to breed-based fetch if no breeds present
+      // fallback to breed-driven fetch if none include breeds
       const noneHaveBreeds = !items.some(x => Array.isArray(x?.breeds) && x.breeds.length > 0);
       if (noneHaveBreeds) {
         const breedsRes = await fetch('https://api.thecatapi.com/v1/breeds', { headers });
         const breeds = await breedsRes.json();
         const start = page * limit;
         const chunk = breeds.slice(start, start + limit);
+
         const byBreed = await Promise.all(
           chunk.map(async (b, i) => {
             try {
@@ -69,7 +73,9 @@ export default function Layout() {
                   breeds: Array.isArray(img.breeds) && img.breeds.length ? img.breeds : [b]
                 };
               }
-            } catch {}
+            } catch (e) {
+              /* ignore single-breed fetch errors; placeholder below */
+            }
             return { id: `${b.id}-${start + i}`, url: b.image?.url || '', breeds: [b] };
           })
         );
@@ -91,14 +97,16 @@ export default function Layout() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [isLoading, hasMore, page, limit, API, KEY]);
 
+  // initial load
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
+  // detect user scroll to avoid auto-trigger on mount
   useEffect(() => {
     const onScroll = () => setHasUserScrolled(true);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -115,7 +123,7 @@ export default function Layout() {
     return Array.from(new Set(names));
   }, [products]);
 
-  // apply filter: exact match if user selected a suggestion or typed full exact name; otherwise partial
+  // apply filter
   const visible = useMemo(() => {
     const q = norm(query).trim();
     if (!q) return products;
@@ -123,7 +131,7 @@ export default function Layout() {
     if (mode === 'exact') {
       return products.filter(it => norm(it?.breeds?.[0]?.name) === q);
     }
-    // partial
+    // partial contains across a few fields
     return products.filter((it) => {
       const b = it?.breeds?.[0] || {};
       return (
@@ -145,7 +153,6 @@ export default function Layout() {
     ? `${visible.length} results • ${products.length} loaded`
     : `${products.length} cats loaded`;
 
-  // when Search is clicked or Enter pressed in Header
   const applySearch = () => {
     const typed = typingQuery.trim();
     const exactExists = breedSuggestions.some((n) => norm(n) === norm(typed));
@@ -167,6 +174,7 @@ export default function Layout() {
 
       <Grid item xs={12}>
         <Container>
+          {/* status + cart */}
           <Grid container spacing={2} alignItems="flex-start" justifyContent="space-between" sx={{ mb: 2 }}>
             <Grid item xs={12} md="auto">
               <Typography variant="h6">{statusText}</Typography>

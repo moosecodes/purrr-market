@@ -31,7 +31,8 @@ export default function Cart() {
 
   const handleRemove = async (id) => {
     dispatch(removeItemFromCart(id));
-    const { [id]: _, ...rest } = items;
+    const rest = { ...items };
+    delete rest[id];
     await localforage.setItem('cart', rest);
   };
 
