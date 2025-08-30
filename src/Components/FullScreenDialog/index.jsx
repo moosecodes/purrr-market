@@ -10,15 +10,15 @@ import {
   Button,
   Stack,
   Chip,
-  Box
 } from '@mui/material';
+import FadeImg from '../FadeImg';
 import CloseIcon from '@mui/icons-material/Close';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({ item }) {
+export default function FullScreenDialog({ item, buttonVariant = 'outlined', fullWidth = false, size = 'medium' }) {
   const [open, setOpen] = useState(false);
 
   // Safe access with fallbacks
@@ -31,7 +31,7 @@ export default function FullScreenDialog({ item }) {
 
   return (
     <>
-      <Button variant="outlined" onClick={() => setOpen(true)}>
+      <Button variant={buttonVariant} fullWidth={fullWidth} size={size} onClick={() => setOpen(true)}>
         Details
       </Button>
 
@@ -60,7 +60,7 @@ export default function FullScreenDialog({ item }) {
         <DialogContent>
           <Stack spacing={2}>
             {img ? (
-              <Box component="img" src={img} alt={name} loading="lazy" sx={{ maxWidth: '100%', borderRadius: 2 }} />
+              <FadeImg alt={name} src={img} aspect="16 / 9" />
             ) : null}
 
             <Stack direction="row" spacing={1} flexWrap="wrap">
