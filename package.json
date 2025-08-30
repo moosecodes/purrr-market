@@ -9,7 +9,6 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.0",
-    "@mui/styled-engine-sc": "^5.11.0",
     "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -19,18 +18,16 @@
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.4.1",
     "react-redux": "^8.0.5",
-    "react-scripts": "5.0.1",
-    "sass": "^1.57.0",
-    "styled-components": "^5.3.6",
-    "web-vitals": "^2.1.4"
+    "sass": "^1.57.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +49,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
+    "@vitejs/plugin-react": "^5.0.2",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
@@ -61,6 +59,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
     "globals": "^16.3.0",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "vite": "^7.1.3"
   }
 }
