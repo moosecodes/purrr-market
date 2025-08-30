@@ -147,8 +147,6 @@ export default function Layout() {
     ? 'Load error'
     : isLoading
     ? 'Loading…'
-    : !hasMore && !query
-    ? 'End of list'
     : query
     ? `${visible.length} results • ${products.length} loaded`
     : `${products.length} cats loaded`;
