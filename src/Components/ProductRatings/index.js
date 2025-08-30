@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 import { styled } from '@mui/material/styles';
-import Rating from "@mui/material/Rating";
+import Rating from '@mui/material/Rating';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import Stack from "@mui/material/Stack";
-import {Chip} from "@mui/material";
-import Box from "@mui/material/Box";
+import Stack from '@mui/material/Stack';
+import { Chip } from '@mui/material';
+import Box from '@mui/material/Box';
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -17,7 +17,7 @@ const StyledRating = styled(Rating)({
 });
 
 export default function ProductRatings({ item }) {
-  const details = item.breeds[0]
+  const details = item.breeds[0];
   const qualities = [
     'affection_level',
     'child_friendly',
@@ -29,30 +29,37 @@ export default function ProductRatings({ item }) {
     'energy_level',
     'shedding_level',
     'vocalisation',
-  ]
+  ];
 
   const formatQualityTitle = (stat) => {
     // Replace underscores with spaces, capitalize first letter of each word
     return stat
       .replace('_', ' ')
-      .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
-  }
+      .replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase());
+  };
 
-  return <>
-    <div>
-      <br/>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, rowGap: 2 }}>
-        {
-          item.breeds[0].temperament.split(',').map(t => <Stack key={t} direction="row" spacing={1}>
-            <Chip label={t} variant="outlined" sx={{ alignSelf: 'stretch'}}/>
-          </Stack>)
-        }
-      </Box>
-      <br/>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, rowGap: 2 }}>
-        {
-          qualities.map(stat => <div key={stat}>
-              <div><small>{ formatQualityTitle(stat) }</small></div>
+  return (
+    <>
+      <div>
+        <br />
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, rowGap: 2 }}>
+          {item.breeds[0].temperament.split(',').map((t) => (
+            <Stack key={t} direction="row" spacing={1}>
+              <Chip
+                label={t}
+                variant="outlined"
+                sx={{ alignSelf: 'stretch' }}
+              />
+            </Stack>
+          ))}
+        </Box>
+        <br />
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, rowGap: 2 }}>
+          {qualities.map((stat) => (
+            <div key={stat}>
+              <div>
+                <small>{formatQualityTitle(stat)}</small>
+              </div>
               <StyledRating
                 name="customized-color"
                 size="small"
@@ -63,9 +70,9 @@ export default function ProductRatings({ item }) {
                 readOnly
               />
             </div>
-          )
-        }
-      </Box>
-    </div>
-  </>
+          ))}
+        </Box>
+      </div>
+    </>
+  );
 }

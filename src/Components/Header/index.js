@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import Button from "@mui/material/Button";
+import Button from '@mui/material/Button';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -83,7 +83,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search by breed' }}
             />
           </Search>
-          <Button variant='contained'>Search</Button>
+          <Button variant="contained">Search</Button>
         </Toolbar>
       </AppBar>
     </Box>

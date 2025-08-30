@@ -11,8 +11,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import ProductRatings from "../ProductRatings";
-import {Link} from "@mui/material";
+import ProductRatings from '../ProductRatings';
+import { Link } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -59,81 +59,118 @@ export default function FullScreenDialog({ item }) {
           </Toolbar>
         </AppBar>
         <List>
-          <ListItem sx={{ display: 'flex', justifyContent: 'center', width:'100%', height: '400px' }}>
-            <img src={item.url} alt="item.id" width="auto"/>
+          <ListItem
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              height: '400px',
+            }}
+          >
+            <img src={item.url} alt="item.id" width="auto" />
           </ListItem>
           <ListItem>
             <ListItemText primary={item.breeds[0].name} />
           </ListItem>
-          {
-            item.breeds[0].alt_names &&
+          {item.breeds[0].alt_names && (
             <ListItem>
-              <ListItemText primary="Alternative Names" secondary={item.breeds[0].alt_names}/>
+              <ListItemText
+                primary="Alternative Names"
+                secondary={item.breeds[0].alt_names}
+              />
             </ListItem>
-          }
+          )}
           <ListItem>
-          <ListItemText primary="Traits" secondary={<ProductRatings item={item} />}/>
+            <ListItemText
+              primary="Traits"
+              secondary={<ProductRatings item={item} />}
+            />
           </ListItem>
           <Divider />
           <ListItem>
-            <ListItemText primary="Origin" secondary={`${item.breeds[0].origin} (${item.breeds[0].country_code})`}/>
+            <ListItemText
+              primary="Origin"
+              secondary={`${item.breeds[0].origin} (${item.breeds[0].country_code})`}
+            />
           </ListItem>
           <ListItem>
-            <ListItemText primary="Description" secondary={item.breeds[0].description} />
+            <ListItemText
+              primary="Description"
+              secondary={item.breeds[0].description}
+            />
           </ListItem>
           <ListItem>
-            <ListItemText primary="Life Span" secondary={`${item.breeds[0].life_span} years`}/>
+            <ListItemText
+              primary="Life Span"
+              secondary={`${item.breeds[0].life_span} years`}
+            />
           </ListItem>
           <ListItem>
-            <ListItemText primary="Resources"/>
+            <ListItemText primary="Resources" />
           </ListItem>
-          {
-            item.breeds[0].vetstreet_url &&
-              <ListItem>
-                <ListItemText primary={
-                  <Link href={item.breeds[0].vetstreet_url} target="_blank" underline="none">
+          {item.breeds[0].vetstreet_url && (
+            <ListItem>
+              <ListItemText
+                primary={
+                  <Link
+                    href={item.breeds[0].vetstreet_url}
+                    target="_blank"
+                    underline="none"
+                  >
                     Vet Street
                   </Link>
                 }
-                />
-              </ListItem>
-          }
-          {
-            item.breeds[0].vcahospitals_url &&
-            <ListItem>
-              <ListItemText primary={
-                <Link href={item.breeds[0].vcahospitals_url} target="_blank" underline="none">
-                  VCA Hospitals
-                </Link>
-              }
               />
             </ListItem>
-          }
-          {
-            item.breeds[0].cfa_url &&
+          )}
+          {item.breeds[0].vcahospitals_url && (
             <ListItem>
-              <ListItemText primary={
-                <Link href={item.breeds[0].cfa_url} target="_blank" underline="none">
-                  CFA Street
-                </Link>
-              }
+              <ListItemText
+                primary={
+                  <Link
+                    href={item.breeds[0].vcahospitals_url}
+                    target="_blank"
+                    underline="none"
+                  >
+                    VCA Hospitals
+                  </Link>
+                }
               />
             </ListItem>
-          }
-          {
-            item.breeds[0].wikipedia_url &&
-              <ListItem>
-                <ListItemText primary={
-                  <Link href={item.breeds[0].wikipedia_url} target="_blank" underline="none">
+          )}
+          {item.breeds[0].cfa_url && (
+            <ListItem>
+              <ListItemText
+                primary={
+                  <Link
+                    href={item.breeds[0].cfa_url}
+                    target="_blank"
+                    underline="none"
+                  >
+                    CFA Street
+                  </Link>
+                }
+              />
+            </ListItem>
+          )}
+          {item.breeds[0].wikipedia_url && (
+            <ListItem>
+              <ListItemText
+                primary={
+                  <Link
+                    href={item.breeds[0].wikipedia_url}
+                    target="_blank"
+                    underline="none"
+                  >
                     Wikipedia
                   </Link>
-                } />
-              </ListItem>
-          }
+                }
+              />
+            </ListItem>
+          )}
 
           <Divider />
         </List>
-
       </Dialog>
     </div>
   );
