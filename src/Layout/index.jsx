@@ -14,6 +14,9 @@ export default function Layout() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+  const [hasUserScrolled, setHasUserScrolled] = useState(false);
+
+  const didInit = useRef(false);
 
   const limit = Number(import.meta.env.VITE_API_LIMIT ?? 20);
   const API = import.meta.env.VITE_API_URL ?? 'https://api.thecatapi.com/v1/images/search';
@@ -24,7 +27,6 @@ export default function Layout() {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     try {
-      // try images search with breeds included
       const params = new URLSearchParams({
         limit: String(limit),
         has_breeds: '1',
@@ -37,7 +39,6 @@ export default function Layout() {
       let items = await res.json();
       items = Array.isArray(items) ? items : [];
 
-      // fallback: fetch by breed if no breed data returned
       const noneHaveBreeds = !items.some(x => Array.isArray(x?.breeds) && x.breeds.length > 0);
       if (noneHaveBreeds) {
         const breedsRes = await fetch('https://api.thecatapi.com/v1/breeds', { headers });
@@ -66,7 +67,6 @@ export default function Layout() {
         items = byBreed.filter(Boolean);
       }
 
-      // append + dedupe
       setProducts(prev => {
         const map = new Map(prev.map(p => [p.id || p.url, p]));
         for (const it of items) map.set(it.id || it.url, it);
@@ -83,12 +83,16 @@ export default function Layout() {
     }
   }
 
-  const didInit = useRef(false);
   useEffect(() => {
-    if (didInit.current) return;   // prevents StrictMode double-invoke in dev
+    if (didInit.current) return; // guard StrictMode double-call in dev
     didInit.current = true;
     fetchProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setHasUserScrolled(true);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const statusText = error
@@ -105,26 +109,39 @@ export default function Layout() {
         <Header />
       </Grid>
 
-      <Grid item xs={12} md={10}>
+      <Grid item xs={12}>
         <Container>
-          <Typography variant="h6" sx={{ mb: 2 }}>{statusText}</Typography>
+          {/* status + cart aligned with gallery */}
+          <Grid
+            container
+            spacing={2}
+            alignItems="flex-start"
+            justifyContent="space-between"
+            sx={{ mb: 2 }}
+          >
+            <Grid item xs={12} md="auto">
+              <Typography variant="h6">{statusText}</Typography>
+            </Grid>
+            <Grid item xs={12} md>
+              <Box sx={{ maxWidth: 520, ml: { md: 'auto' } }}>
+                <Cart />
+              </Box>
+            </Grid>
+          </Grid>
 
           <Gallery products={products} />
 
           <InView
             as="div"
+            rootMargin="300px 0px"
+            initialInView={false}
             onChange={(inView) => {
-              if (inView && !isLoading && hasMore) fetchProducts();
+              if (hasUserScrolled && inView && !isLoading && hasMore) fetchProducts();
             }}
           >
-            {/* invisible sentinel for infinite scroll */}
             <Box sx={{ height: 1 }} />
           </InView>
         </Container>
-      </Grid>
-
-      <Grid item xs={12} md={2}>
-        <Cart />
       </Grid>
 
       <Grid item xs={12}>
