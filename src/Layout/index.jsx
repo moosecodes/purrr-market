@@ -1,5 +1,5 @@
 // src/Layout/index.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { InView } from 'react-intersection-observer';
 
@@ -83,7 +83,10 @@ export default function Layout() {
     }
   }
 
+  const didInit = useRef(false);
   useEffect(() => {
+    if (didInit.current) return;   // prevents StrictMode double-invoke in dev
+    didInit.current = true;
     fetchProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

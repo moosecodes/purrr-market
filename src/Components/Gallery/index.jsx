@@ -10,6 +10,7 @@ import FadeImg from '../FadeImg';
 import FullScreenDialog from '../FullScreenDialog';
 import { addItemToCart } from '../../store/cart/cartSlice';
 import { selectCart } from '../../store/cart/selectors';
+import { breedRating } from '../../utils/breedingRating';
 
 export default function Gallery({ products }) {
   const dispatch = useDispatch();
@@ -21,13 +22,15 @@ export default function Gallery({ products }) {
       {list.map((item, idx) => {
         const id = item?.id ?? item?.url ?? String(idx);
         const img = item?.url ?? '';
-        const breedName = item?.breeds?.[0]?.name ?? 'Unknown breed';
+        const breed = item?.breeds?.[0];
+        const breedName = breed?.name ?? 'Unknown breed';
+        const rating = breedRating(breed);
 
         return (
           <Grid key={id} item xs={12} sm={6} md={4} lg={3}>
             <Stack spacing={2}>
               <b>{breedName}</b>
-              <Rating size="small" value={3} readOnly />
+              <Rating size="small" value={rating} precision={0.5} readOnly />
               {img ? <FadeImg alt={breedName} src={img} aspect="4 / 3" /> : null}
               <Button
                 variant="contained"
