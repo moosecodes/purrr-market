@@ -1,15 +1,7 @@
 import React, { useState, forwardRef } from 'react';
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Dialog,
-  DialogContent,
-  Slide,
-  Button,
-  Stack,
-  Chip,
+  AppBar, Toolbar, IconButton, Typography, Dialog, DialogContent,
+  Slide, Button, Stack, Chip, Box
 } from '@mui/material';
 import FadeImg from '../FadeImg';
 import CloseIcon from '@mui/icons-material/Close';
@@ -74,7 +66,17 @@ export default function FullScreenDialog({ item, buttonVariant = 'outlined', ful
             {description && <Typography variant="body1">{description}</Typography>}
 
             {img ? (
-              <FadeImg alt={name} src={img} aspect="16 / 9" />
+              <Box
+                sx={{
+                  width: { xs: '100%', sm: '80%', md: '50%' }, // ~half on md+
+                  mx: 'auto',
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  boxShadow: 3
+                }}
+              >
+                <FadeImg alt={name} src={img} aspect="16 / 9" />
+              </Box>
             ) : null}
 
 

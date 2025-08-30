@@ -1,4 +1,4 @@
-# The Purrrfect Marketplace 🛍️🐱
+# Purrfect Marketplace 🛍️🐱
 
 A polished React + Vite single-page app that showcases front-end engineering depth: modern UI theming, infinite scroll, typeahead search, client-side cart with persistence, and clean deployment to GitHub Pages. Built as a portfolio piece to demonstrate production-quality practices.
 

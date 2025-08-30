@@ -19,7 +19,7 @@ export default function BasicSpeedDial() {
   return (
     <Box>
       <SpeedDial
-        ariaLabel="The Purrrfect Marketplace Information"
+        ariaLabel="Purrfect Marketplace Information"
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
         icon={<SpeedDialIcon />}
       >
