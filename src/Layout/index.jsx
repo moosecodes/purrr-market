@@ -1,5 +1,4 @@
-// src/Layout/index.jsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import { InView } from 'react-intersection-observer';
 
@@ -8,15 +7,25 @@ import Gallery from '../Components/Gallery';
 import Cart from '../Components/Cart';
 import SpeedDial from '../Components/SpeedDial';
 
+const norm = (s) =>
+  String(s || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+
 export default function Layout() {
+  // data + paging
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+
+  // strict-mode and scroll guards
+  const didInit = useRef(false);
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
 
-  const didInit = useRef(false);
+  // search state
+  const [typingQuery, setTypingQuery] = useState('');   // what user types
+  const [query, setQuery] = useState('');               // applied text
+  const [mode, setMode] = useState('partial');          // 'partial' | 'exact'
 
   const limit = Number(import.meta.env.VITE_API_LIMIT ?? 20);
   const API = import.meta.env.VITE_API_URL ?? 'https://api.thecatapi.com/v1/images/search';
@@ -39,13 +48,13 @@ export default function Layout() {
       let items = await res.json();
       items = Array.isArray(items) ? items : [];
 
+      // fallback to breed-based fetch if no breeds present
       const noneHaveBreeds = !items.some(x => Array.isArray(x?.breeds) && x.breeds.length > 0);
       if (noneHaveBreeds) {
         const breedsRes = await fetch('https://api.thecatapi.com/v1/breeds', { headers });
         const breeds = await breedsRes.json();
         const start = page * limit;
         const chunk = breeds.slice(start, start + limit);
-
         const byBreed = await Promise.all(
           chunk.map(async (b, i) => {
             try {
@@ -67,6 +76,7 @@ export default function Layout() {
         items = byBreed.filter(Boolean);
       }
 
+      // append + dedupe
       setProducts(prev => {
         const map = new Map(prev.map(p => [p.id || p.url, p]));
         for (const it of items) map.set(it.id || it.url, it);
@@ -84,7 +94,7 @@ export default function Layout() {
   }
 
   useEffect(() => {
-    if (didInit.current) return; // guard StrictMode double-call in dev
+    if (didInit.current) return;
     didInit.current = true;
     fetchProducts();
   }, []);
@@ -95,30 +105,69 @@ export default function Layout() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // suggestions from LOADED cats
+  const breedSuggestions = useMemo(() => {
+    const names = [];
+    for (const it of products) {
+      const n = it?.breeds?.[0]?.name;
+      if (n) names.push(n);
+    }
+    return Array.from(new Set(names));
+  }, [products]);
+
+  // apply filter: exact match if user selected a suggestion or typed full exact name; otherwise partial
+  const visible = useMemo(() => {
+    const q = norm(query).trim();
+    if (!q) return products;
+
+    if (mode === 'exact') {
+      return products.filter(it => norm(it?.breeds?.[0]?.name) === q);
+    }
+    // partial
+    return products.filter((it) => {
+      const b = it?.breeds?.[0] || {};
+      return (
+        norm(b.name).includes(q) ||
+        norm(b.origin).includes(q) ||
+        norm(b.temperament).includes(q) ||
+        norm(it.id).includes(q)
+      );
+    });
+  }, [products, query, mode]);
+
   const statusText = error
     ? 'Load error'
     : isLoading
     ? 'Loading…'
-    : !hasMore
+    : !hasMore && !query
     ? 'End of list'
+    : query
+    ? `${visible.length} results • ${products.length} loaded`
     : `${products.length} cats loaded`;
+
+  // when Search is clicked or Enter pressed in Header
+  const applySearch = () => {
+    const typed = typingQuery.trim();
+    const exactExists = breedSuggestions.some((n) => norm(n) === norm(typed));
+    setQuery(typed);
+    setMode(exactExists ? 'exact' : 'partial');
+  };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Header />
+        <Header
+          query={typingQuery}
+          onQueryChange={setTypingQuery}
+          onSearchSubmit={applySearch}
+          onClear={() => { setTypingQuery(''); setQuery(''); setMode('partial'); }}
+          suggestions={breedSuggestions}
+        />
       </Grid>
 
       <Grid item xs={12}>
         <Container>
-          {/* status + cart aligned with gallery */}
-          <Grid
-            container
-            spacing={2}
-            alignItems="flex-start"
-            justifyContent="space-between"
-            sx={{ mb: 2 }}
-          >
+          <Grid container spacing={2} alignItems="flex-start" justifyContent="space-between" sx={{ mb: 2 }}>
             <Grid item xs={12} md="auto">
               <Typography variant="h6">{statusText}</Typography>
             </Grid>
@@ -129,7 +178,7 @@ export default function Layout() {
             </Grid>
           </Grid>
 
-          <Gallery products={products} />
+          <Gallery products={visible} />
 
           <InView
             as="div"

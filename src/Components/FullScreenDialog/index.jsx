@@ -59,11 +59,7 @@ export default function FullScreenDialog({ item, buttonVariant = 'outlined', ful
 
         <DialogContent>
           <Stack spacing={2}>
-            {img ? (
-              <FadeImg alt={name} src={img} aspect="16 / 9" />
-            ) : null}
-
-            <Stack direction="row" spacing={1} flexWrap="wrap">
+          <Stack direction="row" spacing={1} flexWrap="wrap">
               {origin && <Chip label={`Origin: ${origin}`} />}
               {breed?.life_span && <Chip label={`Lifespan: ${breed.life_span} yrs`} />}
               {breed?.weight?.metric && <Chip label={`Weight: ${breed.weight.metric} kg`} />}
@@ -76,6 +72,12 @@ export default function FullScreenDialog({ item, buttonVariant = 'outlined', ful
             )}
 
             {description && <Typography variant="body1">{description}</Typography>}
+
+            {img ? (
+              <FadeImg alt={name} src={img} aspect="16 / 9" />
+            ) : null}
+
+
           </Stack>
         </DialogContent>
       </Dialog>
