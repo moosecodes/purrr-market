@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Purrfect Marketplace</title>
+    <!-- Google tag (gtag.js) -->
+    <script>
+      if (location.hostname === 'moosecodes.github.io') {
+        const s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-8CEBWX4KDQ';
+        document.head.appendChild(s);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+
+        gtag('js', new Date());
+        gtag('config', 'G-8CEBWX4KDQ'); /* keep default page_view for simple sites */
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
